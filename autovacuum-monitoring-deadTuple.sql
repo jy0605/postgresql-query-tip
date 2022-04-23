@@ -41,3 +41,7 @@ FROM pg_stat_user_tables;
 
 select count(*) from rainfall;
 select adj_time from rainfall order by adj_time limit 1;
+
+
+-- 열린 트랜잭션이 얼마나 오래 실행되는지 보여줌(xact_start : 트랜잭션 시작시간)
+select pid, current_timestamp-xact_start as xact_runtime, query from pg_stat_activity order by xact_start;
