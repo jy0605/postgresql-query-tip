@@ -1,0 +1,249 @@
+{
+  "version": "1",
+  "signature": "PostgreSQL JDBC Driver",
+  "date": "2022-05-25T15:31:31.673820400",
+  "sql": "Insert into public.rainfall_onevalue_recentDate\r\n  SELECT a.admin_cd,\r\n    a.adj_time,\r\n    a.forecast_time,\r\n    COALESCE(a.value_DN, 0) * 1 AS value_mm\r\n   FROM rainfall a\r\n     JOIN ( SELECT rainfall.admin_cd,\r\n            rainfall.adj_time,\r\n            max(rainfall.forecast_time) AS forecast_time\r\n           FROM rainfall\r\n          GROUP BY rainfall.admin_cd, rainfall.adj_time) b \r\n\t  ON a.admin_cd \u003d b.admin_cd\r\n\t  AND a.adj_time \u003d b.adj_time\r\n\t  AND a.forecast_time \u003d b.forecast_time\r\n\t  where \r\n\t    to_timestamp(a.adj_time, \u0027YYYYMMDDHH24MI\u0027) \u003e\u003d to_timestamp(\u0027202205251510\u0027, \u0027YYYYMMDDHH24MI\u0027) - interval \u0027720 minute\u0027\r\n  and\r\n  \tto_timestamp(a.adj_time, \u0027YYYYMMDDHH24MI\u0027) \u003c\u003d to_timestamp(\u0027202205251510\u0027, \u0027YYYYMMDDHH24MI\u0027) + interval \u0027190 minute\u0027",
+  "root": [
+    {
+      "name": "rainfall_onevalue_recentdate",
+      "kind": "Modify",
+      "type": "ModifyTable",
+      "cond": "",
+      "desc": "",
+      "attributes": [
+        {
+          "Operation": "Insert"
+        },
+        {
+          "Parallel-Aware": "false"
+        },
+        {
+          "Relation-Name": "rainfall_onevalue_recentdate"
+        },
+        {
+          "Alias": "rainfall_onevalue_recentdate"
+        },
+        {
+          "Startup-Cost": "964178.71"
+        },
+        {
+          "Total-Cost": "1012125.51"
+        },
+        {
+          "Plan-Rows": "35"
+        },
+        {
+          "Plan-Width": "43"
+        }
+      ],
+      "child": [
+        {
+          "name": "",
+          "kind": "Hash",
+          "type": "Hash Join",
+          "cond": "((rainfall.admin_cd \u003d a.admin_cd)\r\nand (rainfall.adj_time \u003d a.adj_time)\r\nand ((max(rainfall.forecast_time)) \u003d a.forecast_time))",
+          "desc": "",
+          "attributes": [
+            {
+              "Parent-Relationship": "Member"
+            },
+            {
+              "Parallel-Aware": "false"
+            },
+            {
+              "Join-Type": "Inner"
+            },
+            {
+              "Startup-Cost": "964178.71"
+            },
+            {
+              "Total-Cost": "1012125.51"
+            },
+            {
+              "Plan-Rows": "35"
+            },
+            {
+              "Plan-Width": "43"
+            },
+            {
+              "Inner-Unique": "true"
+            },
+            {
+              "Hash-Cond": "((rainfall.admin_cd \u003d a.admin_cd) AND (rainfall.adj_time \u003d a.adj_time) AND ((max(rainfall.forecast_time)) \u003d a.forecast_time))"
+            }
+          ],
+          "child": [
+            {
+              "name": "",
+              "kind": "Aggregate",
+              "type": "Aggregate",
+              "cond": "",
+              "desc": "",
+              "attributes": [
+                {
+                  "Strategy": "Sorted"
+                },
+                {
+                  "Partial-Mode": "Simple"
+                },
+                {
+                  "Parent-Relationship": "Outer"
+                },
+                {
+                  "Parallel-Aware": "false"
+                },
+                {
+                  "Startup-Cost": "744472.50"
+                },
+                {
+                  "Total-Cost": "785908.64"
+                },
+                {
+                  "Plan-Rows": "364228"
+                },
+                {
+                  "Plan-Width": "54"
+                },
+                {
+                  "Group-Key": "\n                rainfall.admin_cd\n                rainfall.adj_time\n              "
+                }
+              ],
+              "child": [
+                {
+                  "name": "",
+                  "kind": "Sort",
+                  "type": "Sort",
+                  "cond": "",
+                  "desc": "",
+                  "attributes": [
+                    {
+                      "Parent-Relationship": "Outer"
+                    },
+                    {
+                      "Parallel-Aware": "false"
+                    },
+                    {
+                      "Startup-Cost": "744472.50"
+                    },
+                    {
+                      "Total-Cost": "753920.96"
+                    },
+                    {
+                      "Plan-Rows": "3779386"
+                    },
+                    {
+                      "Plan-Width": "35"
+                    },
+                    {
+                      "Sort-Key": "\n                    rainfall.admin_cd\n                    rainfall.adj_time\n                  "
+                    }
+                  ],
+                  "child": [
+                    {
+                      "name": "rainfall",
+                      "kind": "Node",
+                      "type": "Seq Scan",
+                      "cond": "",
+                      "desc": "",
+                      "attributes": [
+                        {
+                          "Parent-Relationship": "Outer"
+                        },
+                        {
+                          "Parallel-Aware": "false"
+                        },
+                        {
+                          "Relation-Name": "rainfall"
+                        },
+                        {
+                          "Alias": "rainfall"
+                        },
+                        {
+                          "Startup-Cost": "0.00"
+                        },
+                        {
+                          "Total-Cost": "124890.86"
+                        },
+                        {
+                          "Plan-Rows": "3779386"
+                        },
+                        {
+                          "Plan-Width": "35"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "name": "",
+              "kind": "Hash",
+              "type": "Hash",
+              "cond": "",
+              "desc": "",
+              "attributes": [
+                {
+                  "Parent-Relationship": "Inner"
+                },
+                {
+                  "Parallel-Aware": "false"
+                },
+                {
+                  "Startup-Cost": "219375.51"
+                },
+                {
+                  "Total-Cost": "219375.51"
+                },
+                {
+                  "Plan-Rows": "18897"
+                },
+                {
+                  "Plan-Width": "39"
+                }
+              ],
+              "child": [
+                {
+                  "name": "rainfall",
+                  "kind": "Node",
+                  "type": "Seq Scan",
+                  "cond": "((to_timestamp((adj_time)::text, \u0027YYYYMMDDHH24MI\u0027::text) \u003e\u003d (to_timestamp(\u0027202205251510\u0027::text, \u0027YYYYMMDDHH24MI\u0027::text) - \u002712:00:00\u0027::interval))\r\nand (to_timestamp((adj_time)::text, \u0027YYYYMMDDHH24MI\u0027::text) \u003c\u003d (to_timestamp(\u0027202205251510\u0027::text, \u0027YYYYMMDDHH24MI\u0027::text) + \u002703:10:00\u0027::interval)))",
+                  "desc": "((to_timestamp((adj_time)::text, \u0027YYYYMMDDHH24MI\u0027::text) \u003e\u003d (to_timestamp(\u0027202205251510\u0027::text, \u0027YYYYMMDDHH24MI\u0027::text) - \u002712:00:00\u0027::interval)) AND (to_timestamp((adj_time)::text, \u0027YYYYMMDDHH24MI\u0027::text) \u003c\u003d (to_timestamp(\u0027202205251510\u0027::text, \u0027YYYYMMDDHH24MI\u0027::text) + \u002703:10:00\u0027::interval)))",
+                  "attributes": [
+                    {
+                      "Parent-Relationship": "Outer"
+                    },
+                    {
+                      "Parallel-Aware": "false"
+                    },
+                    {
+                      "Relation-Name": "rainfall"
+                    },
+                    {
+                      "Alias": "a"
+                    },
+                    {
+                      "Startup-Cost": "0.00"
+                    },
+                    {
+                      "Total-Cost": "219375.51"
+                    },
+                    {
+                      "Plan-Rows": "18897"
+                    },
+                    {
+                      "Plan-Width": "39"
+                    },
+                    {
+                      "Filter": "((to_timestamp((adj_time)::text, \u0027YYYYMMDDHH24MI\u0027::text) \u003e\u003d (to_timestamp(\u0027202205251510\u0027::text, \u0027YYYYMMDDHH24MI\u0027::text) - \u002712:00:00\u0027::interval)) AND (to_timestamp((adj_time)::text, \u0027YYYYMMDDHH24MI\u0027::text) \u003c\u003d (to_timestamp(\u0027202205251510\u0027::text, \u0027YYYYMMDDHH24MI\u0027::text) + \u002703:10:00\u0027::interval)))"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
